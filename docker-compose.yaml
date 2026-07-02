@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17
+
+    container_name: clinicdesk-db
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: clinicdesk
+      POSTGRES_PASSWORD: clinicdesk123
+      POSTGRES_DB: clinicdesk
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
