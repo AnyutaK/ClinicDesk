@@ -1,0 +1,67 @@
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+
+# Build directories
+bin/
+out/
+target/
+build/
+
+# Gradle
+.gradle/
+
+# Maven
+.mvn/
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# Environment Variables
+.env
+.env.*
+
+# PostgreSQL
+postgres-data/
+pgdata/
+
+# Database dumps
+*.sql.gz
+*.dump
+*.backup
+
+# Docker
+docker-compose.override.yml
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# IntelliJ 
+.idea/
+*.iml
+
+# Eclipse 
+.settings/
+.project
+.classpath
+
+# NetBeans 
+nbproject/private/
+
+# JavaFX generated files
+*.fxml.bak
