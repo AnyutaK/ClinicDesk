@@ -1,3 +1,4 @@
+DROP TRIGGER IF EXISTS trg_appointment ON Appointments;
 CREATE OR REPLACE FUNCTION appointment_trigger()
 RETURNS TRIGGER
 LANGUAGE plpgsql
