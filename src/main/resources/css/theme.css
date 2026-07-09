@@ -15,7 +15,7 @@
         );
 }
 .content-wrapper {
-    -fx-background-color: transparent;
+    -fx-background-color: #bfd2ff;
     -fx-padding: 40;
 }
 /* ================= SIDEBAR ================= */

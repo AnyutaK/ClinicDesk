@@ -13,7 +13,7 @@ import java.util.List;
 public class PatientDAO {
 
     public List<Patient> searchPatients(String keyword) {
-        String sql = "SELECT patient_id, name, insurance FROM search_patients(?)";
+        String sql = "SELECT patient_id, name,insurance FROM search_patients(?)";
         List<Patient> results = new ArrayList<>();
 
         try (Connection connection = DatabaseManager.openConnection();
@@ -25,7 +25,7 @@ public class PatientDAO {
                     int patientId = resultSet.getInt("patient_id");
                     String name = resultSet.getString("name");
                     String insurance = resultSet.getString("insurance");
-                    results.add(new Patient(patientId, name, insurance));
+                    results.add(new Patient(patientId, name, null, null, insurance));
                 }
             }
         } catch (SQLException exception) {
@@ -36,12 +36,12 @@ public class PatientDAO {
     }
 
     public Patient getPatientById(int id) {
-        String sql = "SELECT patient_id, name, insurance FROM Patients WHERE patient_id = ?";
+        String sql = "SELECT patient_id, name,sex,dob, insurance FROM Patients WHERE patient_id = ?";
         try (Connection c = DatabaseManager.openConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Patient(rs.getInt("patient_id"), rs.getString("name"), rs.getString("insurance"));
+                    return new Patient(rs.getInt("patient_id"), rs.getString("name"), rs.getString("sex"), rs.getDate("dob"), rs.getString("insurance"));
                 }
             }
         } catch (SQLException e) {
@@ -50,16 +50,17 @@ public class PatientDAO {
         return null;
     }
 
-    public Patient createPatient(String name, java.sql.Date dob, String insurance) {
-        String sql = "INSERT INTO Patients (name, dob, insurance) VALUES (?, ?, ?) RETURNING patient_id";
+    public Patient createPatient(String name, String sex, java.sql.Date dob, String insurance) {
+        String sql = "INSERT INTO Patients (name,sex,dob, insurance) VALUES (?, ?, ?, ?) RETURNING patient_id";
         try (Connection c = DatabaseManager.openConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, name);
-            ps.setDate(2, dob);
-            ps.setString(3, insurance);
+            ps.setString(2, sex);
+            ps.setDate(3, dob);
+            ps.setString(4, insurance);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int id = rs.getInt(1);
-                    return new Patient(id, name, insurance);
+                    return new Patient(id, name,sex,dob, insurance);
                 }
             }
         } catch (SQLException e) {
@@ -78,4 +79,36 @@ public class PatientDAO {
             throw new RuntimeException("Unable to delete patient", e);
         }
     }
+    public boolean updatePatient(int id,
+                             String name,
+                             String sex,
+                             java.sql.Date dob,
+                             String insurance) {
+
+    String sql = """
+        UPDATE Patients
+        SET name = ?,
+            sex = ?,
+            dob = ?,
+            insurance = ?
+        WHERE patient_id = ?
+        """;
+
+    try (Connection c = DatabaseManager.openConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
+
+        ps.setString(1, name);
+        ps.setString(2, sex);
+        ps.setDate(3, dob);
+        ps.setString(4, insurance);
+        ps.setInt(5, id);
+
+        return ps.executeUpdate() > 0;
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Unable to update patient", e);
+    }
 }
+
+}
+

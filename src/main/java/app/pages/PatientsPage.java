@@ -5,9 +5,6 @@ import model.Patient;
 import service.PatientService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import dao.PatientDAO;
-import model.Patient;
-import service.PatientService;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -127,13 +124,19 @@ public class PatientsPage extends VBox {
         Label nameLabel = new Label("Name:");
         TextField nameField = new TextField();
 
+        Label sexLabel = new Label("Gender:");
+
+        ComboBox<String> sexBox = new ComboBox<>();
+        sexBox.getItems().addAll("Male","Female", "Other");
+        sexBox.setValue("Male");
+
         Label dobLabel = new Label("Date of birth:");
         DatePicker dob = new DatePicker();
 
         Label insLabel = new Label("Insurance:");
         TextField insField = new TextField();
 
-        VBox content = new VBox(8, nameLabel, nameField, dobLabel, dob, insLabel, insField);
+        VBox content = new VBox(8, nameLabel, nameField, sexLabel, sexBox, dobLabel, dob, insLabel, insField);
         content.setPadding(new Insets(12));
 
         dlg.getDialogPane().setContent(content);
@@ -142,10 +145,11 @@ public class PatientsPage extends VBox {
         dlg.setResultConverter(bt -> {
             if (bt == ButtonType.OK) {
                 String name = nameField.getText();
+                String sex = sexBox.getValue();
                 java.sql.Date d = dob.getValue() == null ? null : java.sql.Date.valueOf(dob.getValue());
                 String ins = insField.getText();
                 if (name == null || name.trim().isEmpty() || d == null) return null;
-                return patientService.createPatient(name.trim(), d, ins);
+                return patientService.createPatient(name.trim(),sex, d, ins);
             }
             return null;
         });
@@ -154,13 +158,30 @@ public class PatientsPage extends VBox {
     }
 
     private void showPatientDetails(Patient patient) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setTitle("Patient details");
-        a.setHeaderText(patient.getName());
-        a.setContentText("ID: " + patient.getPatientId() + "\nInsurance: " + (patient.getInsurance() == null ? "None" : patient.getInsurance()));
-        a.showAndWait();
+
+    Patient fullPatient =
+            patientService.getPatient(patient.getPatientId());
+
+    if (fullPatient == null) {
+        return;
     }
 
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+    alert.setTitle("Patient Details");
+
+    alert.setHeaderText(fullPatient.getName());
+
+    alert.setContentText(
+            "Patient ID : " + fullPatient.getPatientId() +
+            "\nName : " + fullPatient.getName() +
+            "\nDOB : " + fullPatient.getDob() +
+            "\nGender : " + fullPatient.getSex() +
+            "\nInsurance : " + fullPatient.getInsurance()
+    );
+
+    alert.showAndWait();
+}
     private boolean confirmDelete(Patient patient) {
         Alert c = new Alert(Alert.AlertType.CONFIRMATION, "Delete patient " + patient.getName() + "?", ButtonType.YES, ButtonType.NO);
         return c.showAndWait().filter(bt -> bt == ButtonType.YES).isPresent();
@@ -191,7 +212,7 @@ public class PatientsPage extends VBox {
 
         Button editButton = new Button("Edit");
         editButton.getStyleClass().addAll("secondary-button", "button-pill");
-        // TODO: wire edit flow
+        editButton.setOnAction(e -> showEditPatientDialog(patient));
 
         Button deleteButton = new Button("Delete");
         deleteButton.getStyleClass().addAll("tertiary-button", "button-pill");
@@ -207,4 +228,71 @@ public class PatientsPage extends VBox {
         card.getChildren().addAll(titleRow, patientMeta, new Separator(), actionRow);
         return card;
     }
-}
+
+private void showEditPatientDialog(Patient patient) {
+
+    Dialog<ButtonType> dialog = new Dialog<>();
+    dialog.setTitle("Edit Patient");
+
+    TextField nameField = new TextField(patient.getName());
+
+    ComboBox<String> sexBox = new ComboBox<>();
+    sexBox.getItems().addAll("Male", "Female", "Other");
+    sexBox.setValue(patient.getSex());
+
+    DatePicker dobPicker = new DatePicker();
+
+    if (patient.getDob() != null) {
+        dobPicker.setValue(patient.getDob().toLocalDate());
+    }
+
+    TextField insuranceField =
+            new TextField(patient.getInsurance());
+
+    VBox content = new VBox(
+            10,
+            new Label("Name"),
+            nameField,
+            new Label("Gender"),
+            sexBox,
+            new Label("Date of Birth"),
+            dobPicker,
+            new Label("Insurance"),
+            insuranceField
+    );
+
+    content.setPadding(new Insets(15));
+
+    dialog.getDialogPane().setContent(content);
+
+    dialog.getDialogPane().getButtonTypes().addAll(
+            ButtonType.OK,
+            ButtonType.CANCEL
+    );
+
+    dialog.showAndWait().ifPresent(result -> {
+
+        if (result == ButtonType.OK) {
+
+            boolean success =
+                    patientService.updatePatient(
+
+                            patient.getPatientId(),
+
+                            nameField.getText(),
+
+                            sexBox.getValue(),
+
+                            java.sql.Date.valueOf(
+                                    dobPicker.getValue()),
+
+                            insuranceField.getText()
+
+                    );
+
+            if (success) {
+                refreshPatientCards(searchField.getText());
+            }
+        }
+    });
+}}
