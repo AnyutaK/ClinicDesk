@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class AppointmentService {
 
@@ -48,5 +50,21 @@ public class AppointmentService {
         int demoPatientId = 1;
         String result = dao.callBookAppointment(demoPatientId, match.getSlotId());
         return result != null && result.toLowerCase().contains("success");
+    }
+
+    public Map<LocalDate, Integer> getAppointmentsCountByDay(int daysBack) {
+        try {
+            return dao.getAppointmentsCountByDay(daysBack);
+        } catch (RuntimeException ex) {
+            return new LinkedHashMap<>();
+        }
+    }
+
+    public Map<String, Integer> getAppointmentsByDepartment() {
+        try {
+            return dao.getAppointmentsByDepartment();
+        } catch (RuntimeException ex) {
+            return new LinkedHashMap<>();
+        }
     }
 }

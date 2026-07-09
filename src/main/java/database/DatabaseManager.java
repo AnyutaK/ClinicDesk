@@ -1,6 +1,6 @@
 package database;
 
-import util.DBConfig;
+import utils.DBConfig;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

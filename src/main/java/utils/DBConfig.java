@@ -1,4 +1,4 @@
-package util;
+package utils;
 
 public final class DBConfig {
     public static final String JDBC_URL = System.getenv().getOrDefault(

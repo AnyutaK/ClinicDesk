@@ -10,7 +10,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <javafx.version>21.0.1</javafx.version>
-        <!-- Use mac-aarch64 on Apple Silicon; change to mac on Intel if needed -->
         <javafx.platform>mac-aarch64</javafx.platform>
     </properties>
 

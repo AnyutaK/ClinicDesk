@@ -3,7 +3,7 @@ package app;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import util.Theme;
+import utils.Theme;
 
 public class App extends Application {
 

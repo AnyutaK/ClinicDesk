@@ -62,4 +62,42 @@ public class AppointmentDAO {
         }
         return "Booking failed: unknown error";
     }
+
+    public java.util.Map<java.time.LocalDate, Integer> getAppointmentsCountByDay(int daysBack) {
+        String sql = "SELECT s.appointment_date, COUNT(a.appointment_id) AS cnt " +
+                "FROM Appointments a JOIN Slots s ON a.slot_id = s.slot_id " +
+                "WHERE s.appointment_date >= CURRENT_DATE - (? - 1) " +
+                "GROUP BY s.appointment_date ORDER BY s.appointment_date";
+        java.util.Map<java.time.LocalDate, Integer> map = new java.util.LinkedHashMap<>();
+        try (Connection c = DatabaseManager.openConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, daysBack);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    map.put(rs.getDate(1).toLocalDate(), rs.getInt("cnt"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to fetch appointment counts by day", e);
+        }
+        return map;
+    }
+
+    public java.util.Map<String, Integer> getAppointmentsByDepartment() {
+        String sql = "SELECT d.department, COUNT(a.appointment_id) AS cnt " +
+                "FROM Appointments a " +
+                "JOIN Slots s ON a.slot_id = s.slot_id " +
+                "JOIN Doctors d ON s.doctor_id = d.doctor_id " +
+                "GROUP BY d.department ORDER BY cnt DESC";
+        java.util.Map<String, Integer> map = new java.util.LinkedHashMap<>();
+        try (Connection c = DatabaseManager.openConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    map.put(rs.getString(1), rs.getInt("cnt"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to fetch appointments by department", e);
+        }
+        return map;
+    }
 }
