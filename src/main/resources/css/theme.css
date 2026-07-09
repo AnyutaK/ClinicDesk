@@ -1,0 +1,249 @@
+:root {
+    -fx-base: #141414;
+    -fx-background: #141414;
+    -fx-control-inner-background: #1F1F1F;
+    -fx-font-family: "Inter", "Poppins", "Sans-Serif";
+    -fx-text-fill: white;
+    -fx-highlight-fill: #00C2A8;
+    -fx-highlight-text-fill: #000000;
+}
+
+.root, .main-root {
+    -fx-background-color: #141414;
+}
+
+.sidebar {
+    -fx-background-color: #0D0D0D;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 28;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.45), 18, 0, 0, 4);
+}
+
+.sidebar-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A8A8A8;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 14 18;
+    -fx-background-radius: 14;
+}
+
+.nav-button:hover {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+}
+
+.nav-button:selected, .nav-button:selected:hover {
+    -fx-background-color: rgba(0, 194, 168, 0.16);
+    -fx-text-fill: white;
+    -fx-border-color: #00C2A8;
+    -fx-border-width: 1px;
+}
+
+.content-wrapper {
+    -fx-background-color: rgba(31, 31, 31, 0.95);
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-padding: 28;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.25), 24, 0, 0, 10);
+}
+
+.page-card {
+    -fx-background-color: #1F1F1F;
+    -fx-background-radius: 24;
+    -fx-padding: 32;
+    -fx-spacing: 20;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.18), 20, 0, 0, 6);
+}
+
+.dashboard-page {
+    -fx-spacing: 28;
+}
+
+.dashboard-header {
+    -fx-spacing: 8;
+}
+
+.dashboard-title {
+    -fx-font-size: 34px;
+    -fx-font-weight: 800;
+    -fx-fill: white;
+}
+
+.dashboard-subtitle {
+    -fx-text-fill: #A8A8A8;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.stat-card {
+    -fx-background-color: #191919;
+    -fx-background-radius: 20;
+    -fx-padding: 22;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.18), 20, 0, 0, 6);
+}
+
+.stat-value {
+    -fx-text-fill: white;
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+}
+
+.stat-label {
+    -fx-text-fill: #A8A8A8;
+    -fx-font-size: 13px;
+}
+
+.overview-card {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 24;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.16), 18, 0, 0, 8);
+}
+
+.card-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+}
+
+.appointment-item {
+    -fx-background-color: rgba(255,255,255,0.03);
+    -fx-background-radius: 16;
+    -fx-padding: 16;
+}
+
+.appointment-time {
+    -fx-text-fill: #00C2A8;
+    -fx-font-weight: 700;
+}
+
+.appointment-patient {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+}
+
+.appointment-context {
+    -fx-text-fill: #A8A8A8;
+    -fx-font-size: 12px;
+}
+
+.action-chip {
+    -fx-background-color: rgba(0, 194, 168, 0.10);
+    -fx-text-fill: #00C2A8;
+    -fx-padding: 12 16;
+    -fx-background-radius: 14;
+    -fx-font-weight: 600;
+}
+
+.patients-page {
+    -fx-spacing: 24;
+}
+
+.page-subtitle {
+    -fx-text-fill: #A8A8A8;
+    -fx-font-size: 14px;
+}
+
+.search-field {
+    -fx-background-color: #111111;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #6B6B6B;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: #2A2A2A;
+    -fx-border-width: 1px;
+    -fx-padding: 14 16;
+}
+
+.primary-button {
+    -fx-background-color: #00C2A8;
+    -fx-text-fill: black;
+    -fx-font-weight: 700;
+}
+
+.secondary-button {
+    -fx-background-color: #252525;
+    -fx-text-fill: white;
+    -fx-border-color: #2A2A2A;
+    -fx-border-width: 1px;
+}
+
+.tertiary-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A8A8A8;
+}
+
+.button-pill {
+    -fx-background-radius: 999;
+    -fx-padding: 10 18;
+}
+
+.patient-card {
+    -fx-background-color: #1D1D1D;
+    -fx-background-radius: 24;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.16), 18, 0, 0, 8);
+}
+
+.patient-name {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+}
+
+.patient-age {
+    -fx-text-fill: #A8A8A8;
+    -fx-font-size: 13px;
+}
+
+.patient-specialty {
+    -fx-text-fill: #A8A8A8;
+}
+
+.patient-meta {
+    -fx-text-fill: #A8A8A8;
+    -fx-font-size: 13px;
+}
+
+.status-badge {
+    -fx-background-color: rgba(59, 130, 246, 0.16);
+    -fx-text-fill: #3B82F6;
+    -fx-padding: 6 12;
+    -fx-background-radius: 999;
+    -fx-font-size: 12px;
+}
+
+.page-header {
+    -fx-fill: white;
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+}
+
+.app-header {
+    -fx-background-color: transparent;
+    -fx-padding: 12 24;
+    -fx-alignment: center-left;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+}
+
+.content-scroll {
+    -fx-background: transparent;
+}
+
+/* Scrollbar tweaks for the content area */
+.content-scroll .viewport {
+    -fx-background-color: transparent;
+}

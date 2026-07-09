@@ -256,14 +256,14 @@ AS $$
 BEGIN
 RETURN QUERY
 SELECT
-doctor_id,
-doctor_name,
-department
-FROM Doctors
-WHERE doctor_name ILIKE '%'||keyword||'%'
-OR department ILIKE '%'||keyword||'%'
-OR specialization ILIKE '%'||keyword||'%'
-ORDER BY doctor_name;
+    d.doctor_id,
+    d.doctor_name,
+    d.department
+FROM Doctors d
+WHERE d.doctor_name ILIKE '%'||keyword||'%'
+OR d.department ILIKE '%'||keyword||'%'
+OR d.specialization ILIKE '%'||keyword||'%'
+ORDER BY d.doctor_name;
 END;
 $$;
 
