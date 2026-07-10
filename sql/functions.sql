@@ -249,7 +249,10 @@ RETURNS TABLE
 (
     doctor_id INTEGER,
     doctor_name VARCHAR,
-    department VARCHAR
+    department VARCHAR,
+    specialization VARCHAR,
+    phone VARCHAR,
+    email VARCHAR
 )
 LANGUAGE plpgsql
 AS $$
@@ -258,11 +261,16 @@ RETURN QUERY
 SELECT
     d.doctor_id,
     d.doctor_name,
-    d.department
+    d.department,
+    d.specialization,
+    d.phone,
+    d.email
 FROM Doctors d
 WHERE d.doctor_name ILIKE '%'||keyword||'%'
 OR d.department ILIKE '%'||keyword||'%'
 OR d.specialization ILIKE '%'||keyword||'%'
+OR d.phone ILIKE '%'||keyword||'%'
+OR d.email ILIKE '%'||keyword||'%'
 ORDER BY d.doctor_name;
 END;
 $$;
