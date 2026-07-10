@@ -21,7 +21,7 @@ public class PatientService {
     public Patient getPatient(int id) {
         return patientDAO.getPatientById(id);
     }
-
+    
     public Patient createPatient(String name, String sex , Date dob, String insurance) {
         return patientDAO.createPatient(name, sex, dob, insurance);
     }

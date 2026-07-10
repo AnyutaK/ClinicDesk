@@ -22,6 +22,7 @@ public class DoctorService {
     public boolean deleteDoctor(int id) {
     return doctorDAO.deleteDoctor(id);
     }
+
     public Doctor createDoctor(String name,
                            String department,
                            String specialization,

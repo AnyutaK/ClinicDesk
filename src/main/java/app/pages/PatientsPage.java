@@ -143,16 +143,53 @@ public class PatientsPage extends VBox {
         dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         dlg.setResultConverter(bt -> {
-            if (bt == ButtonType.OK) {
-                String name = nameField.getText();
-                String sex = sexBox.getValue();
-                java.sql.Date d = dob.getValue() == null ? null : java.sql.Date.valueOf(dob.getValue());
-                String ins = insField.getText();
-                if (name == null || name.trim().isEmpty() || d == null) return null;
-                return patientService.createPatient(name.trim(),sex, d, ins);
-            }
+
+    if (bt == ButtonType.OK) {
+
+        String name = nameField.getText().trim();
+        String sex = sexBox.getValue();
+        String insurance = insField.getText().trim();
+
+        if (name.isEmpty()) {
+            showError("Patient name cannot be empty.");
             return null;
-        });
+        }
+
+        if (!name.matches("[A-Za-z ]+")) {
+            showError("Patient name should contain only letters.");
+            return null;
+        }
+
+        if (sex == null) {
+            showError("Please select a gender.");
+            return null;
+        }
+
+        if (dob.getValue() == null) {
+            showError("Please select a date of birth.");
+            return null;
+        }
+
+        if (dob.getValue().isAfter(java.time.LocalDate.now())) {
+            showError("Date of birth cannot be in the future.");
+            return null;
+        }
+
+        if (insurance.isEmpty()) {
+            showError("Insurance cannot be empty.");
+            return null;
+        }
+
+        return patientService.createPatient(
+                name,
+                sex,
+                java.sql.Date.valueOf(dob.getValue()),
+                insurance
+        );
+    }
+
+    return null;
+});
 
         dlg.showAndWait().ifPresent(p -> refreshPatientCards(searchField.getText()));
     }
@@ -241,13 +278,11 @@ private void showEditPatientDialog(Patient patient) {
     sexBox.setValue(patient.getSex());
 
     DatePicker dobPicker = new DatePicker();
-
     if (patient.getDob() != null) {
         dobPicker.setValue(patient.getDob().toLocalDate());
     }
 
-    TextField insuranceField =
-            new TextField(patient.getInsurance());
+    TextField insuranceField = new TextField(patient.getInsurance());
 
     VBox content = new VBox(
             10,
@@ -264,35 +299,71 @@ private void showEditPatientDialog(Patient patient) {
     content.setPadding(new Insets(15));
 
     dialog.getDialogPane().setContent(content);
-
-    dialog.getDialogPane().getButtonTypes().addAll(
-            ButtonType.OK,
-            ButtonType.CANCEL
-    );
+    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
     dialog.showAndWait().ifPresent(result -> {
 
         if (result == ButtonType.OK) {
 
-            boolean success =
-                    patientService.updatePatient(
+            String name = nameField.getText().trim();
+            String sex = sexBox.getValue();
+            String insurance = insuranceField.getText().trim();
 
-                            patient.getPatientId(),
+            if (name.isEmpty()) {
+                showError("Patient name cannot be empty.");
+                return;
+            }
 
-                            nameField.getText(),
+            if (!name.matches("[A-Za-z ]+")) {
+                showError("Patient name should contain only letters.");
+                return;
+            }
 
-                            sexBox.getValue(),
+            if (sex == null) {
+                showError("Please select a gender.");
+                return;
+            }
 
-                            java.sql.Date.valueOf(
-                                    dobPicker.getValue()),
+            if (dobPicker.getValue() == null) {
+                showError("Please select a date of birth.");
+                return;
+            }
 
-                            insuranceField.getText()
+            if (dobPicker.getValue().isAfter(java.time.LocalDate.now())) {
+                showError("Date of birth cannot be in the future.");
+                return;
+            }
 
-                    );
+            if (insurance.isEmpty()) {
+                showError("Insurance cannot be empty.");
+                return;
+            }
 
-            if (success) {
+            boolean updated = patientService.updatePatient(
+                    patient.getPatientId(),
+                    name,
+                    sex,
+                    java.sql.Date.valueOf(dobPicker.getValue()),
+                    insurance
+            );
+
+            if (updated) {
                 refreshPatientCards(searchField.getText());
             }
         }
     });
+}
+        
+
+private void showError(String message) {
+
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+
+    alert.setTitle("Validation Error");
+
+    alert.setHeaderText(null);
+
+    alert.setContentText(message);
+
+    alert.showAndWait();
 }}

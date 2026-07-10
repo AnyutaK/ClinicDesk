@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
@@ -48,7 +49,7 @@ public class DoctorsPage extends VBox {
         );
         refreshDoctorCards("");
     }
-
+    
     private VBox createHeader() {
         VBox header = new VBox(6);
         header.getStyleClass().add("page-card");
@@ -243,8 +244,18 @@ private void showCreateDoctorDialog() {
 
     TextField nameField = new TextField();
 
-    TextField departmentField = new TextField();
+    ComboBox<String> departmentBox = new ComboBox<>();
 
+    departmentBox.getItems().addAll(
+            "Cardiology",
+            "Dermatology",
+            "ENT",
+            "General Medicine",
+            "Gynecology",
+            "Neurology",
+            "Ophthalmology",
+            "Orthopedics"
+    );
     TextField specializationField = new TextField();
 
     TextField phoneField = new TextField();
@@ -255,7 +266,7 @@ private void showCreateDoctorDialog() {
     grid.add(nameField,1,0);
 
     grid.add(new Label("Department"),0,1);
-    grid.add(departmentField,1,1);
+    grid.add(departmentBox,1,1);
 
     grid.add(new Label("Specialization"),0,2);
     grid.add(specializationField,1,2);
@@ -271,16 +282,53 @@ private void showCreateDoctorDialog() {
     dialog.showAndWait().ifPresent(button -> {
 
         if(button == saveButton){
+            
+            String name = nameField.getText().trim();
+            String department = departmentBox.getValue();
+            String specialization = specializationField.getText().trim();
+            String phone = phoneField.getText().trim();
+            String email = emailField.getText().trim();
+
+            if (name.isEmpty()) {
+                showError("Doctor name cannot be empty.");
+                return;
+            }
+
+            if (!name.matches("[A-Za-z .]+")) {
+                showError("Doctor name can contain only letters.");
+                return;
+            }
+
+            if (department == null) {
+                showError("Please select a department.");
+                return;
+            }
+
+            if (specialization.isEmpty()) {
+                showError("Specialization cannot be empty.");
+                return;
+            }
+
+            if (!phone.matches("\\d{10}")) {
+                showError("Phone number must contain exactly 10 digits.");
+                return;
+            }
+
+            if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                showError("Invalid email address.");
+                return;
+            }
 
             doctorService.createDoctor(
-
-                    nameField.getText(),
-                    departmentField.getText(),
-                    specializationField.getText(),
-                    phoneField.getText(),
-                    emailField.getText()
-
+                    name,
+                    department,
+                    specialization,
+                    phone,
+                    email
             );
+
+            refreshDoctorCards(searchField.getText());
+            dialog.close();
 
             refreshDoctorCards(searchField.getText());
         }
@@ -315,9 +363,18 @@ private void showEditDoctorDialog(Doctor doctor) {
     TextField nameField =
             new TextField(fullDoctor.getDoctorName());
 
-    TextField departmentField =
-            new TextField(fullDoctor.getDepartment());
+    ComboBox<String> departmentBox = new ComboBox<>();
 
+    departmentBox.getItems().addAll(
+            "Cardiology",
+            "Dermatology",
+            "ENT",
+            "General Medicine",
+            "Gynecology",
+            "Neurology",
+            "Ophthalmology",
+            "Orthopedics"
+    );
     TextField specializationField =
             new TextField(fullDoctor.getSpecialization());
 
@@ -331,7 +388,7 @@ private void showEditDoctorDialog(Doctor doctor) {
     grid.add(nameField,1,0);
 
     grid.add(new Label("Department"),0,1);
-    grid.add(departmentField,1,1);
+    grid.add(departmentBox,1,1);
 
     grid.add(new Label("Specialization"),0,2);
     grid.add(specializationField,1,2);
@@ -352,7 +409,7 @@ private void showEditDoctorDialog(Doctor doctor) {
 
                     fullDoctor.getDoctorId(),
                     nameField.getText(),
-                    departmentField.getText(),
+                    departmentBox.getValue(),
                     specializationField.getText(),
                     phoneField.getText(),
                     emailField.getText()
@@ -364,5 +421,17 @@ private void showEditDoctorDialog(Doctor doctor) {
 
     });
 
+}
+private void showError(String message) {
+
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+
+    alert.setTitle("Validation Error");
+
+    alert.setHeaderText(null);
+
+    alert.setContentText(message);
+
+    alert.showAndWait();
 }
 }
