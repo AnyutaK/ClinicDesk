@@ -43,4 +43,8 @@ public class Patient {
     public String getInsurance() {
         return insurance;
     }
+    @Override
+    public String toString() {
+        return name;
+    }
 }

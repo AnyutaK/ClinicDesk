@@ -180,4 +180,42 @@ public boolean deleteDoctor(int id) {
         throw new RuntimeException("Unable to delete doctor", e);
     }
 }
+public List<Doctor> getAllDoctors() {
+
+    String sql = """
+            SELECT doctor_id,
+                   doctor_name,
+                   department,
+                   specialization,
+                   phone,
+                   email
+            FROM Doctors
+            ORDER BY doctor_name
+            """;
+
+    List<Doctor> doctors = new ArrayList<>();
+
+    try (Connection c = DatabaseManager.openConnection();
+         PreparedStatement ps = c.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+
+            doctors.add(new Doctor(
+                    rs.getInt("doctor_id"),
+                    rs.getString("doctor_name"),
+                    rs.getString("department"),
+                    rs.getString("specialization"),
+                    rs.getString("phone"),
+                    rs.getString("email")
+            ));
+
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Unable to load doctors", e);
+    }
+
+    return doctors;
+}
 }

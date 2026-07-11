@@ -121,13 +121,13 @@
             .25,
             0,
             6
-        );
+        );}
 .card,
 .stat-card{
     -fx-scale-x:1;
     -fx-scale-y:1;
 }
-}
+
 .card:hover,
 .stat-card:hover{
     -fx-background-color: rgba(30,42,68,0.98);

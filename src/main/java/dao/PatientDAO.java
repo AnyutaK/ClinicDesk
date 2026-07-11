@@ -109,6 +109,41 @@ public class PatientDAO {
         throw new RuntimeException("Unable to update patient", e);
     }
 }
+public List<Patient> getAllPatients() {
 
+    String sql = """
+            SELECT patient_id,
+                   name,
+                   sex,
+                   dob,
+                   insurance
+            FROM Patients
+            ORDER BY name
+            """;
+
+    List<Patient> patients = new ArrayList<>();
+
+    try (Connection c = DatabaseManager.openConnection();
+         PreparedStatement ps = c.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+
+            patients.add(new Patient(
+                    rs.getInt("patient_id"),
+                    rs.getString("name"),
+                    rs.getString("sex"),
+                    rs.getDate("dob"),
+                    rs.getString("insurance")
+            ));
+
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Unable to load patients", e);
+    }
+
+    return patients;
+}
 }
 

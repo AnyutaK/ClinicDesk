@@ -53,5 +53,9 @@ public boolean updateDoctor(int id,
             phone,
             email
     );
+    
+}
+public List<Doctor> getAllDoctors() {
+    return doctorDAO.getAllDoctors();
 }
 }

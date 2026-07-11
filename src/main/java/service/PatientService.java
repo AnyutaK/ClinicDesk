@@ -43,6 +43,10 @@ public class PatientService {
             dob,
             insurance
     );
+
+}
+public List<Patient> getAllPatients() {
+    return patientDAO.getAllPatients();
 }
 }
 

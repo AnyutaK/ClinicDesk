@@ -47,4 +47,8 @@ public class Doctor {
     public String getEmail() {
         return email;
     }
+    @Override
+    public String toString() {
+    return doctorId + " - " + name;
+}
 }

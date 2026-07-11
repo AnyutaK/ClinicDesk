@@ -1,70 +1,58 @@
 package service;
 
 import dao.AppointmentDAO;
-import model.Slot;
+import model.Appointment;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Collections;
+import java.sql.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.LinkedHashMap;
 
 public class AppointmentService {
 
-    private final AppointmentDAO dao = new AppointmentDAO();
+    private final AppointmentDAO appointmentDAO;
 
-    public List<Slot> getAvailableSlots(LocalDate date) {
-        try {
-            return dao.getAvailableSlots(date);
-        } catch (RuntimeException ex) {
-            return Collections.emptyList();
-        }
+    public AppointmentService(AppointmentDAO appointmentDAO) {
+        this.appointmentDAO = appointmentDAO;
     }
 
-    public List<String> getBookingsForDay(LocalDate date) {
-        try {
-            return dao.getBookingsForDay(date);
-        } catch (RuntimeException ex) {
-            return Collections.emptyList();
-        }
+    public List<Appointment> searchAppointments(String keyword) {
+        return appointmentDAO.searchAppointments(keyword);
     }
 
-    /**
-     * Attempt to book using existing patient id and slot id. For the demo UI we accept
-     * a fixed demo patient id (1) if caller doesn't have one. Returns true on success.
-     */
-    public boolean bookAppointment(LocalDate date, LocalTime time, String patientRef) {
-        List<Slot> slots = getAvailableSlots(date);
-        Slot match = null;
-        for (Slot s : slots) {
-            if (s.getTime().equals(time)) {
-                match = s;
-                break;
-            }
-        }
-        if (match == null) return false;
-
-        // For now use patient id 1 as demo patient (assumes sample data exists). A real
-        // implementation would resolve `patientRef` to a patient_id or create one.
-        int demoPatientId = 1;
-        String result = dao.callBookAppointment(demoPatientId, match.getSlotId());
-        return result != null && result.toLowerCase().contains("success");
+    public Appointment getAppointment(int id) {
+        return appointmentDAO.getAppointmentById(id);
     }
 
-    public Map<LocalDate, Integer> getAppointmentsCountByDay(int daysBack) {
-        try {
-            return dao.getAppointmentsCountByDay(daysBack);
-        } catch (RuntimeException ex) {
-            return new LinkedHashMap<>();
-        }
+    public Appointment createAppointment(
+            int patientId,
+            int slotId,
+            Date schedulingDate,
+            String status) {
+
+        return appointmentDAO.createAppointment(
+                patientId,
+                slotId,
+                schedulingDate,
+                status
+        );
     }
 
-    public Map<String, Integer> getAppointmentsByDepartment() {
-        try {
-            return dao.getAppointmentsByDepartment();
-        } catch (RuntimeException ex) {
-            return new LinkedHashMap<>();
-        }
+    public boolean updateAppointment(
+            int appointmentId,
+            int patientId,
+            int slotId,
+            Date schedulingDate,
+            String status) {
+
+        return appointmentDAO.updateAppointment(
+                appointmentId,
+                patientId,
+                slotId,
+                schedulingDate,
+                status
+        );
+    }
+
+    public boolean deleteAppointment(int appointmentId) {
+        return appointmentDAO.deleteAppointment(appointmentId);
     }
 }
