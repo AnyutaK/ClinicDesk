@@ -351,17 +351,14 @@ private void showCreateAppointmentDialog() {
 
     statusBox.getItems().addAll(
 
-            "scheduled",
-
-            "checked_in",
-
+            "available",
             "attended",
-
+            "did not attend",
             "cancelled"
 
     );
 
-    statusBox.setValue("scheduled");
+    statusBox.setValue("available");
 
     GridPane grid = new GridPane();
 
@@ -462,9 +459,9 @@ private void showEditAppointmentDialog(Appointment appointment) {
     ComboBox<String> statusBox = new ComboBox<>();
 
     statusBox.getItems().addAll(
-            "scheduled",
-            "checked_in",
+            "available",
             "attended",
+            "did not attend",
             "cancelled"
     );
 
@@ -500,15 +497,22 @@ private void showEditAppointmentDialog(Appointment appointment) {
 
     if(selectedDoctor!=null){
 
-        slotBox.getItems().addAll(
+    List<Slot> slots =
+            slotService.getAvailableSlotsByDoctor(
+                    selectedDoctor.getDoctorId());
 
-                slotService.getAvailableSlotsByDoctor(
-                        selectedDoctor.getDoctorId())
+    slotBox.getItems().addAll(slots);
 
-        );
+    // Add currently booked slot so it can be selected
+    Slot currentSlot =
+            slotService.getSlot(full.getSlotId());
 
+    if(currentSlot != null &&
+       !slotBox.getItems().contains(currentSlot)) {
+
+        slotBox.getItems().add(currentSlot);
     }
-
+}
     // Select current slot if present
 
     for(Slot s : slotBox.getItems()){
@@ -534,9 +538,13 @@ private void showEditAppointmentDialog(Appointment appointment) {
         if(d!=null){
 
             slotBox.getItems().addAll(
-                    slotService.getAvailableSlotsByDoctor(d.getDoctorId())
-            );
+        slotService.getAvailableSlotsByDoctor(
+                d.getDoctorId())
+        );
 
+        slotBox.getItems().add(
+        slotService.getSlot(full.getSlotId())
+        );
         }
 
     });

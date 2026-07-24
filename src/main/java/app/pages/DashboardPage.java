@@ -12,14 +12,27 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import dao.DashboardDAO;
+import service.DashboardService;
 
 public class DashboardPage extends VBox {
+    private final DashboardService dashboardService;
 
     public DashboardPage() {
+
+        dashboardService = new DashboardService(
+                new DashboardDAO()
+        );
+
         getStyleClass().add("dashboard-page");
         setPadding(new Insets(24));
         setSpacing(28);
-        getChildren().addAll(createHeader(), createStatsRow(), createOverviewRow());
+
+        getChildren().addAll(
+                createHeader(),
+                createStatsRow(),
+                createOverviewRow()
+        );
     }
 
     private VBox createHeader() {
@@ -41,11 +54,46 @@ public class DashboardPage extends VBox {
         row.setAlignment(Pos.CENTER_LEFT);
 
         row.getChildren().addAll(
-            createStatCard("12", "New appointments", () -> openAppointments()),
-            createStatCard("8", "Patients waiting", () -> openPatients()),
-            createStatCard("5", "Staff on duty", () -> showInfo("Staff", "Staff on duty: 5")),
-            createStatCard("94%", "Utilization", () -> showInfo("Utilization", "Clinic utilization is 94%"))
-        );
+
+        createStatCard(
+            String.valueOf(
+                dashboardService.getTodayAppointments()
+            ),
+            "Today's appointments",
+            this::openAppointments
+        ),
+
+
+        createStatCard(
+            String.valueOf(
+                dashboardService.getWaitingPatients()
+            ),
+            "Patients waiting",
+            this::openPatients
+        ),
+
+
+        createStatCard(
+            String.valueOf(
+                dashboardService.getDoctorsOnDuty()
+            ),
+            "Doctors on duty",
+            () -> showInfo(
+                "Doctors",
+                "Doctors currently active"
+            )
+        ),
+
+
+        createStatCard(
+            dashboardService.getUtilization()+"%",
+            "Slot utilization",
+            () -> showInfo(
+                "Utilization",
+                "Today's clinic utilization"
+            )
+        )
+    );
 
         row.setPrefWidth(Double.MAX_VALUE);
         return row;

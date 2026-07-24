@@ -13,10 +13,6 @@ public class SlotService {
         this.slotDAO = slotDAO;
     }
 
-    public List<Slot> getAvailableSlots() {
-        return slotDAO.getAvailableSlots();
-    }
-
     public List<Slot> getAvailableSlotsByDoctor(int doctorId) {
     return slotDAO.getAvailableSlotsByDoctor(doctorId);
 }

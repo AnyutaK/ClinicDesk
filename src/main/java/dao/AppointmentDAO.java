@@ -270,10 +270,11 @@ public boolean updateAppointment(
             """;
 
     String reserveNewSlotSql = """
-            UPDATE Slots
-            SET is_available = FALSE
-            WHERE slot_id = ?
-            """;
+        UPDATE Slots
+        SET is_available = FALSE
+        WHERE slot_id = ?
+        AND is_available = TRUE
+    """;
 
     try (Connection c = DatabaseManager.openConnection()) {
 
@@ -324,9 +325,9 @@ public boolean updateAppointment(
                 ps.setString(4, status);
                 ps.setInt(5, appointmentId);
 
-                int rows = ps.executeUpdate();
+                int updated = ps.executeUpdate();
 
-                if (rows == 0) {
+                if (updated == 0) {
                     c.rollback();
                     return false;
                 }
