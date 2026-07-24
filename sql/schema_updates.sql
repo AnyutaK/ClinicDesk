@@ -6,11 +6,10 @@ ALTER TABLE Appointments
 ADD CONSTRAINT chk_appointment_status
 CHECK (
     status IN (
-        'scheduled',
-        'completed',
+        'available',
+        'attended',
         'cancelled',
-        'no-show',
-        'available'
+        'no-show'
     )
 );
 

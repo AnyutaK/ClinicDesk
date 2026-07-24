@@ -65,3 +65,5 @@ nbproject/private/
 
 # JavaFX generated files
 *.fxml.bak
+
+data/
