@@ -23,8 +23,6 @@ public class NavigationController {
         pages.put("patients", new PatientsPage());
         pages.put("doctors", new DoctorsPage());
         pages.put("appointments", new app.pages.AppointmentsPage());
-        pages.put("reports", createPlaceholderPage("Reports"));
-        pages.put("settings", createPlaceholderPage("Settings"));
     }
 
     public void registerNavigationButton(String key, ToggleButton button) {

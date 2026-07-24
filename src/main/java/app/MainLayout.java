@@ -52,10 +52,7 @@ public class MainLayout extends BorderPane {
             createNavItem("Dashboard", "dashboard"),
             createNavItem("Patients", "patients"),
             createNavItem("Doctors", "doctors"),
-            createNavItem("Appointments", "appointments"),
-            createNavItem("Analytics", "analytics"),
-            createNavItem("Reports", "reports"),
-            createNavItem("Settings", "settings")
+            createNavItem("Appointments", "appointments")
         );
 
         sidebar.getChildren().addAll(title, new Separator(), navGroup);

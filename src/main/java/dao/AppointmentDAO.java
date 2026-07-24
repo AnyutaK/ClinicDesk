@@ -10,7 +10,39 @@ import java.util.List;
 public class AppointmentDAO {
 public List<Appointment> searchAppointments(String keyword) {
 
-    String sql = """
+    String sql;
+
+if (keyword == null || keyword.isBlank()) {
+
+    sql = """
+        SELECT
+            a.appointment_id,
+            p.patient_id,
+            p.name AS patient_name,
+            d.doctor_id,
+            d.doctor_name,
+            s.slot_id,
+            CAST(
+                s.appointment_date + s.appointment_time
+                AS timestamp
+            ) AS appointment_datetime,
+            a.status
+        FROM Appointments a
+        JOIN Patients p
+            ON a.patient_id = p.patient_id
+        JOIN Slots s
+            ON a.slot_id = s.slot_id
+        JOIN Doctors d
+            ON s.doctor_id = d.doctor_id
+        ORDER BY
+            s.appointment_date DESC,
+            s.appointment_time DESC
+        LIMIT 200
+        """;
+
+} else {
+
+    sql = """
         SELECT
             a.appointment_id,
             p.patient_id,
@@ -35,20 +67,24 @@ public List<Appointment> searchAppointments(String keyword) {
             OR d.doctor_name ILIKE ?
             OR a.status ILIKE ?
         ORDER BY
-            s.appointment_date,
-            s.appointment_time
+            s.appointment_date DESC,
+            s.appointment_time DESC
         """;
+}
 
     List<Appointment> appointments = new ArrayList<>();
 
     try (Connection c = DatabaseManager.openConnection();
          PreparedStatement ps = c.prepareStatement(sql)) {
 
-        String search = "%" + (keyword == null ? "" : keyword.trim()) + "%";
+        if (keyword != null && !keyword.isBlank()) {
+
+        String search = "%" + keyword.trim() + "%";
 
         ps.setString(1, search);
         ps.setString(2, search);
         ps.setString(3, search);
+}
 
         try (ResultSet rs = ps.executeQuery()) {
 
